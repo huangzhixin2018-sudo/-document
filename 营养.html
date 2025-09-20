@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>HealthKeeper — 极简黑白 · 亚健康管理</title>
+<style>
+  :root{
+    --bg:#ffffff;
+    --fg:#0a0a0a;
+    --muted:#666666;
+    --accent:#000000;
+    --glass: rgba(0,0,0,0.04);
+    --radius:12px;
+    --card-pad:16px;
+    --shadow: 0 6px 18px rgba(0,0,0,0.06);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1100px;margin:28px auto;padding:20px;display:grid;grid-template-columns:260px 1fr;gap:28px}
+  /* Sidebar */
+  .sidebar{border-right:1px solid rgba(0,0,0,0.06);padding-right:12px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand .logo{width:48px;height:48px;background:var(--fg);color:var(--bg);display:flex;align-items:center;justify-content:center;border-radius:10px;font-weight:700}
+  .brand h1{font-size:16px;margin:0}
+  nav{margin-top:22px}
+  .nav-btn{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;color:var(--fg);font-size:14px;border:none;background:transparent;cursor:pointer;width:100%;text-align:left}
+  .nav-btn:hover{background:var(--glass)}
+  .nav-btn.active{background:rgba(0,0,0,0.06);font-weight:600}
+  .muted{color:var(--muted);font-size:13px}
+  .small{font-size:13px}
+  /* Main */
+  .main{padding-left:12px}
+  header.top{display:flex;justify-content:space-between;align-items:center}
+  header.top h2{margin:0;font-size:20px}
+  .date-pill{padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);font-size:13px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+  .card{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:var(--card-pad);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .tile-icon{width:44px;height:44;border-radius:10px;background:var(--fg);color:var(--bg);display:flex;align-items:center;justify-content:center}
+  .tile-title{font-size:13px;color:var(--muted)}
+  .tile-val{font-size:20px;font-weight:700;margin-top:6px}
+  .section{margin-top:18px}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.08);background:transparent;cursor:pointer}
+  .btn-primary{background:var(--fg);color:var(--bg);border:none}
+  .control-row{display:flex;gap:8px;align-items:center}
+  /* Symptom list */
+  .sym-row{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;border:1px dashed rgba(0,0,0,0.04)}
+  .sym-name{font-weight:600}
+  .sym-level{font-size:13px;color:var(--muted)}
+  /* Tabs */
+  .tab-nav{display:flex;gap:1px;border:1px solid rgba(0,0,0,0.06);border-radius:8px;overflow:hidden;margin-bottom:12px}
+  .tab-btn{padding:8px 12px;text-align:center;flex:1;background:var(--glass);color:var(--muted);font-size:14px}
+  .tab-btn.active{background:var(--fg);color:var(--bg);font-weight:500}
+  .tab-content{display:none}
+  .tab-content.active{display:block}
+  /* System selector */
+  .system-selector{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .system-pill{padding:6px 12px;border-radius:999px;border:1px solid rgba(0,0,0,0.06);cursor:pointer;font-size:14px}
+  .system-pill.active{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+  /* Knowledge block */
+  .knowledge-block{margin-bottom:16px}
+  .knowledge-block h4{margin:0 0 8px 0;font-size:15px;color:var(--fg);border-bottom:1px solid rgba(0,0,0,0.06);padding-bottom:6px}
+  .knowledge-block p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+  .knowledge-block ul{margin:8px 0 0 16px;color:var(--muted);font-size:14px;line-height:1.5}
+  /* Report category */
+  .report-cat{margin-bottom:24px}
+  .report-cat h3{margin:0 0 12px 0;font-size:16px;color:var(--fg)}
+  .report-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border:1px solid rgba(0,0,0,0.04);border-radius:8px;margin-bottom:8px}
+  .report-item-name{font-weight:500}
+  .report-item-range{font-size:13px;color:var(--muted)}
+  .status-good{color:#00c250}
+  .status-warn{color:#e67700}
+  .status-bad{color:#e03131}
+  /* Supp card */
+  .supp-card{border:1px solid rgba(0,0,0,0.06);border-radius:var(--radius);padding:var(--card-pad);margin-bottom:12px}
+  .supp-name{font-weight:600}
+  .supp-use{font-size:14px;color:var(--muted)}
+  .supp-core{font-size:13px;color:var(--muted);margin:6px 0}
+  /* Meal plan */
+  .meal-nav{display:flex;gap:1px;overflow:hidden;border:1px solid rgba(0,0,0,0.06);border-radius:8px;margin-bottom:12px}
+  .meal-btn{flex:1;padding:8px;text-align:center;background:var(--glass);color:var(--muted);font-size:14px}
+  .meal-btn.active{background:var(--fg);color:var(--bg);font-weight:500}
+  .meal-content{display:none}
+  .meal-content.active{display:block}
+  .meal-card{border:1px solid rgba(0,0,0,0.06);border-radius:var(--radius);padding:var(--card-pad);margin-bottom:12px}
+  .meal-time{font-weight:600;margin-bottom:6px}
+  .meal-desc{color:var(--muted);font-size:14px}
+  .meal-footer{margin-top:12px;text-align:right}
+  /* responsive */
+  @media (max-width:900px){
+    .container{grid-template-columns:1fr; padding:12px}
+    .sidebar{display:flex;order:2;margin-top:18px;border-right:none;border-top:1px solid rgba(0,0,0,0.06);padding-top:16px}
+    .main{order:1}
+    .grid-3{grid-template-columns:repeat(1,1fr)}
+    .two-col{grid-template-columns:1fr}
+  }
+  /* tiny */
+  .muted-badge{font-size:12px;color:var(--muted);padding:6px 8px;border-radius:999px;border:1px solid rgba(0,0,0,0.04)}
+  .pill{display:inline-block;padding:6px 8px;border-radius:999px;border:1px solid rgba(0,0,0,0.06);font-size:13px}
+  .input{padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.08);width:100%}
+  footer{margin-top:24px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="container" role="application" aria-label="HealthKeeper">
+  <aside class="sidebar" aria-label="主导航">
+    <div class="brand">
+      <div class="logo">H</div>
+      <div>
+        <h1>HealthKeeper</h1>
+        <div class="muted">极简·黑白 · 身心健康管理</div>
+      </div>
+    </div>
+
+    <nav id="nav" aria-label="导航">
+      <button class="nav-btn active" data-view="dashboard"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" stroke="white" stroke-width="0"/></svg> 概览</button>
+      <button class="nav-btn" data-view="knowledge">知识库</button>
+      <button class="nav-btn" data-view="symptom">症状追踪</button>
+      <button class="nav-btn" data-view="plan">营养计划</button>
+      <button class="nav-btn" data-view="supp">补充剂库</button>
+      <button class="nav-btn" data-view="report">健康报告</button>
+      <button class="nav-btn" data-view="settings">设置</button>
+    </nav>
+
+    <div style="margin-top:18px" class="muted small">乔布斯简约风 • 黑白配色 • 医学+营养+行为</div>
+  </aside>
+
+  <main class="main" id="main" tabindex="0">
+    <!-- Dashboard -->
+    <section id="view-dashboard">
+      <header class="top">
+        <div>
+          <h2>今日健康概览</h2>
+          <div class="muted">便捷的自查与行动清单</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <div class="muted small">张三 · 34岁 · 男</div>
+          <div class="date-pill" id="today"></div>
+        </div>
+      </header>
+
+      <div class="grid-3">
+        <div class="card">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="tile-icon">☀</div>
+            <div>
+              <div class="tile-title">能量</div>
+              <div class="tile-val" id="energyVal">52%</div>
+              <div class="muted small">日常活力</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="tile-icon">❤</div>
+            <div>
+              <div class="tile-title">心情</div>
+              <div class="tile-val" id="moodVal">40%</div>
+              <div class="muted small">情绪状态</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="tile-icon">🌙</div>
+            <div>
+              <div class="tile-title">睡眠</div>
+              <div class="tile-val" id="sleepVal">62%</div>
+              <div class="muted small">恢复度</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="card">
+          <h3 style="margin:0">本周重点</h3>
+          <ol style="margin-top:12px;color:var(--muted)">
+            <li>完成牙周科初诊并记录牙龈照片</li>
+            <li>连续 7 天坚持补铁计划（阶段1）</li>
+            <li>每天早晚 6 分钟共振呼吸</li>
+          </ol>
+          <div style="margin-top:12px"><button class="btn btn-primary" onclick="navTo('knowledge')">进入知识库</button></div>
+        </div>
+      </div>
+
+      <div class="section two-col">
+        <div class="card">
+          <h3 style="margin:0">营养提醒</h3>
+          <p class="muted" style="margin-top:8px">优先高吸收铁（配维C）、高质量蛋白、每天 1g Omega-3，避免过多加工食品与夜间暴饮。</p>
+        </div>
+        <div class="card">
+          <h3 style="margin:0">情绪 & 睡眠</h3>
+          <p class="muted" style="margin-top:8px">固定睡眠时间；白天日光暴露 10 分钟；睡前 60 分钟远离屏幕；练习慢呼吸。</p>
+        </div>
+      </div>
+
+      <footer>
+        <div class="muted small" style="margin-top:12px">提示：本 App 为健康管理工具，不取代医生诊断。对于严重症状请及时就医。</div>
+      </footer>
+    </section>
+
+    <!-- Knowledge Base -->
+    <section id="view-knowledge" style="display:none">
+      <header class="top">
+        <div>
+          <h2>知识库</h2>
+          <div class="muted">系统化健康知识 · 中西医融合</div>
+        </div>
+        <div class="muted small">持续更新</div>
+      </header>
+
+      <div class="section">
+        <div class="system-selector">
+          <div class="system-pill active" onclick="selectSystem('metabolism')">代谢系统</div>
+          <div class="system-pill" onclick="selectSystem('nervous')">神经系统</div>
+          <div class="system-pill" onclick="selectSystem('immune')">免疫系统</div>
+          <div class="system-pill" onclick="selectSystem('digestive')">消化系统</div>
+          <div class="system-pill" onclick="selectSystem('endocrine')">内分泌系统</div>
+        </div>
+
+        <div class="tab-nav">
+          <button class="tab-btn active" onclick="switchTab('nutrition')">营养</button>
+          <button class="tab-btn" onclick="switchTab('tcm')">中医</button>
+          <button class="tab-btn" onclick="switchTab('symptoms')">症状</button>
+          <button class="tab-btn" onclick="switchTab('repair')">修复</button>
+        </div>
+
+        <div id="knowledge-content">
+          <!-- 营养 -->
+          <div class="tab-content active" id="tab-nutrition">
+            <div class="knowledge-block">
+              <h4>核心功能</h4>
+              <p>代谢系统负责能量生成、血糖调控、脂肪燃烧与营养转化。它是身体的“能量调度中心”。</p>
+            </div>
+            <div class="knowledge-block">
+              <h4>关键营养素</h4>
+              <ul>
+                <li><strong>B族维生素</strong>：线粒体能量代谢必需，缺乏易疲劳</li>
+                <li><strong>镁</strong>：参与300+酶反应，调节胰岛素敏感性</li>
+                <li><strong>铬</strong>：增强胰岛素作用，稳定血糖</li>
+                <li><strong>膳食纤维</strong>：延缓糖吸收，养肠道菌群</li>
+                <li><strong>Omega-3</strong>：降低慢性炎症，保护代谢通路</li>
+              </ul>
+            </div>
+            <div class="knowledge-block">
+              <h4>推荐食物</h4>
+              <p>燕麦、山药、三文鱼、菠菜、鸡蛋、苹果醋、坚果、豆类</p>
+            </div>
+          </div>
+
+          <!-- 中医 -->
+          <div class="tab-content" id="tab-tcm">
+            <div class="knowledge-block">
+              <h4>脾主运化</h4>
+              <p>中医认为“脾”是代谢核心，主食物转化。脾虚则“运化失司”，表现为疲劳、湿重、食欲差。</p>
+            </div>
+            <div class="knowledge-block">
+              <h4>气为血之帅</h4>
+              <p>“气”由脾胃生成，推动血液运行。脾虚则气弱，气血不足，导致乏力、面色差。</p>
+            </div>
+            <div class="knowledge-block">
+              <h4>常见体质</h4>
+              <ul>
+                <li><strong>脾虚湿盛</strong>：便溏、舌苔厚、水肿</li>
+                <li><strong>气虚</strong>：懒言、乏力、易汗</li>
+                <li><strong>痰湿</strong>：肥胖、困倦、口黏</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 症状 -->
+          <div class="tab-content" id="tab-symptoms">
+            <div class="knowledge-block">
+              <h4>常见失衡信号</h4>
+              <ul>
+                <li>饭后犯困、易疲劳</li>
+                <li>体重难控（易胖难瘦）</li>
+                <li>口苦、口气重</li>
+                <li>舌苔厚腻、大便黏马桶</li>
+                <li>皮肤差、长痘</li>
+              </ul>
+            </div>
+            <div class="knowledge-block">
+              <h4>潜在风险</h4>
+              <p>长期代谢紊乱可能发展为胰岛素抵抗、脂肪肝、2型糖尿病、慢性炎症。</p>
+            </div>
+          </div>
+
+          <!-- 修复 -->
+          <div class="tab-content" id="tab-repair">
+            <div class="knowledge-block">
+              <h4>修复路径</h4>
+              <ol>
+                <li><strong>输入优化</strong>：低GI食物、温热熟食</li>
+                <li><strong>转化支持</strong>：补B族、益生菌、消化酶</li>
+                <li><strong>分配调节</strong>：控糖、运动、睡眠</li>
+                <li><strong>排出清理</strong>：排湿（薏米茯苓）、通便、出汗</li>
+              </ol>
+            </div>
+            <div class="knowledge-block">
+              <h4>生活方式建议</h4>
+              <ul>
+                <li>早餐吃小米山药粥</li>
+                <li>饭后缓步10分钟</li>
+                <li>22:30前入睡</li>
+                <li>避免生冷寒凉食物</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Symptom Tracker -->
+    <section id="view-symptom" style="display:none">
+      <header class="top">
+        <div><h2>症状追踪</h2><div class="muted">记录你的身体信号，观察趋势</div></div>
+        <div class="muted small">导出功能待集成</div>
+      </header>
+
+      <div class="section card">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+          <input id="newSym" class="input" placeholder="添加新症状（例如：疲劳）" />
+          <button class="btn btn-primary" onclick="addSymptom()">添加</button>
+        </div>
+
+        <div id="symList" style="display:grid;gap:8px"></div>
+
+        <div style="margin-top:12px" class="muted small">提示：持续两周以上的中重度症状建议就医。</div>
+      </div>
+    </section>
+
+    <!-- Nutrition Plan -->
+    <section id="view-plan" style="display:none">
+      <header class="top">
+        <div><h2>营养计划</h2><div class="muted">中医 + 营养学 + 临床整合</div></div>
+        <div class="muted small">可导出 PDF（未来）</div>
+      </header>
+
+      <div class="section">
+        <div class="meal-nav">
+          <button class="meal-btn active" onclick="switchPhase('acute')">急性修复</button>
+          <button class="meal-btn" onclick="switchPhase('stable')">稳定强化</button>
+          <button class="meal-btn" onclick="switchPhase('long')">长期维护</button>
+        </div>
+
+        <!-- 急性修复 -->
+        <div class="meal-content active" id="phase-acute">
+          <div class="card">
+            <h3 style="margin:0">核心营养重点</h3>
+            <p class="muted" style="margin-top:8px">优先高吸收铁、高质量蛋白、胶原肽、益生菌。目标：快速修复肠道与造血系统。</p>
+          </div>
+
+          <!-- 早餐 -->
+          <div class="meal-card">
+            <div class="meal-time">早餐 · 方案1</div>
+            <div class="meal-desc">
+              <div><span class="pill">主食</span> 小米山药粥</div>
+              <div style="margin-top:6px"><span class="pill">蛋白</span> 水煮蛋 ×1</div>
+              <div style="margin-top:6px"><span class="pill">营养</span> 枸杞10粒 + 维C片</div>
+            </div>
+            <div class="meal-footer">
+              <button class="btn" onclick="nextMeal('breakfast-acute')">查看下一个早餐</button>
+            </div>
+          </div>
+
+          <!-- 午餐 -->
+          <div class="meal-card">
+            <div class="meal-time">午餐 · 方案1</div>
+            <div class="meal-desc">
+              <div><span class="pill">主食</span> 糙米</div>
+              <div style="margin-top:6px"><span class="pill">蛋白</span> 清蒸鱼/鸡胸</div>
+              <div style="margin-top:6px"><span class="pill">蔬菜</span> 西兰花 + 胡萝卜</div>
+            </div>
+            <div class="meal-footer">
+              <button class="btn" onclick="nextMeal('lunch-acute')">下一个午餐</button>
+            </div>
+          </div>
+
+          <!-- 晚餐 -->
+          <div class="meal-card">
+            <div class="meal-time">晚餐 · 方案1</div>
+            <div class="meal-desc">
+              <div><span class="pill">主食</span> 红薯泥</div>
+              <div style="margin-top:6px"><span class="pill">蛋白</span> 豆腐 + 虾仁</div>
+              <div style="margin-top:6px"><span class="pill">汤</span> 紫菜蛋花汤</div>
+            </div>
+            <div class="meal-footer">
+              <button class="btn" onclick="nextMeal('dinner-acute')">下一个晚餐</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 稳定强化 -->
+        <div class="meal-content" id="phase-stable">
+          <div class="card">
+            <h3 style="margin:0">核心营养重点</h3>
+            <p class="muted" style="margin-top:8px">持续补充EAA、维生素矿物质、Omega-3。目标：提升代谢稳定性与免疫力。</p>
+          </div>
+
+          <div class="meal-card">
+            <div class="meal-time">早餐 · 方案1</div>
+            <div class="meal-desc">
+              <div><span class="pill">主食</span> 燕麦奶</div>
+              <div style="margin-top:6px"><span class="pill">蛋白</span> 希腊酸奶 + 奇亚籽</div>
+              <div style="margin-top:6px"><span class="pill">坚果</span> 核桃3颗</div>
+            </div>
+            <div class="meal-footer">
+              <button class="btn" onclick="nextMeal('breakfast-stable')">查看下一个早餐</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 长期维护 -->
+        <div class="meal-content" id="phase-long">
+          <div class="card">
+            <h3 style="margin:0">核心营养重点</h3>
+            <p class="muted" style="margin-top:8px">饮食为主，低剂量补充剂维持。目标：形成可持续健康习惯。</p>
+          </div>
+
+          <div class="meal-card">
+            <div class="meal-time">早餐 · 方案1</div>
+            <div class="meal-desc">
+              <div><span class="pill">主食</span> 全麦面包</div>
+              <div style="margin-top:6px"><span class="pill">蛋白</span> 煎蛋 + 牛油果</div>
+              <div style="margin-top:6px"><span class="pill">饮品</span> 绿茶 + 柠檬</div>
+            </div>
+            <div class="meal-footer">
+              <button class="btn" onclick="nextMeal('breakfast-long')">查看下一个早餐</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Supplements -->
+    <section id="view-supp" style="display:none">
+      <header class="top">
+        <div><h2>补充剂库</h2><div class="muted">已筛选的靠谱品牌与用途</div></div>
+      </header>
+
+      <div class="section">
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <input id="newSuppName" class="input" placeholder="补充剂名称" style="flex:1"/>
+          <input id="newSuppCore" class="input" placeholder="核心成分" style="flex:1"/>
+          <button class="btn btn-primary" onclick="addSupplement()">添加</button>
+        </div>
+
+        <div id="suppList">
+          <!-- 动态插入 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Reports -->
+    <section id="view-report" style="display:none">
+      <header class="top">
+        <div><h2>健康报告</h2><div class="muted">基于自测与补剂依从的建议</div></div>
+      </header>
+
+      <div class="section">
+        <div class="report-cat">
+          <h3>血液常规</h3>
+          <div class="report-item">
+            <div>
+              <div class="report-item-name">血红蛋白</div>
+              <div class="report-item-range">正常范围：130–175 g/L</div>
+            </div>
+            <div class="status-good">142</div>
+          </div>
+          <div class="report-item">
+            <div>
+              <div class="report-item-name">铁蛋白</div>
+              <div class="report-item-range">正常范围：30–400 μg/L</div>
+            </div>
+            <div class="status-warn">48</div>
+          </div>
+        </div>
+
+        <div class="report-cat">
+          <h3>代谢指标</h3>
+          <div class="report-item">
+            <div>
+              <div class="report-item-name">空腹血糖</div>
+              <div class="report-item-range">正常范围：3.9–6.1 mmol/L</div>
+            </div>
+            <div class="status-good">5.2</div>
+          </div>
+          <div class="report-item">
+            <div>
+              <div class="report-item-name">胰岛素</div>
+              <div class="report-item-range">正常范围：<15 μIU/mL</div>
+            </div>
+            <div class="status-bad">22</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section id="view-settings" style="display:none">
+      <header class="top">
+        <div><h2>设置</h2><div class="muted">隐私与风格</div></div>
+      </header>
+
+      <div class="section two-col">
+        <div class="card">
+          <h3 style="margin:0">主题</h3>
+          <div style="margin-top:10px;color:var(--muted)">
+            当前：<b>乔布斯极简黑白</b>（如需可扩展深色/彩色主题）
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin:0">数据导出</h3>
+          <div style="margin-top:10px;color:var(--muted)">
+            CSV / PDF 导出计划在后续版本上线
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* ====== 基本数据 ====== */
+const state = {
+  quick: { energy: 52, mood: 40, sleep: 62 },
+  symptoms: [
+    { id: 1, name: '疲劳', level: 3 },
+    { id: 2, name: '睡眠差', level: 2 },
+    { id: 3, name: '胃肠胀气', level: 1 }
+  ],
+  supplements: [
+    {name:'Solgar Gentle Iron', use:'补铁', core:'甘氨酸亚铁', note:'温和不刺激'},
+    {name:'Vital Proteins Collagen', use:'胶原肽', core:'Type I & III', note:'牙龈/关节修复'},
+    {name:'Nordic Naturals Omega-3', use:'抗炎', core:'EPA/DHA', note:'保护牙周'},
+    {name:'Thorne B-Complex', use:'造血/代谢', core:'活性B族', note:'高品质B族'}
+  ]
+};
+
+try{ const raw = localStorage.getItem('hk_state_v1'); if(raw) Object.assign(state, JSON.parse(raw)); }catch(e){}
+
+/* ====== UI 初始化 ====== */
+document.getElementById('today').textContent = (new Date()).toLocaleDateString();
+function renderQuick(){ 
+  document.getElementById('energyVal').textContent = state.quick.energy + '%';
+  document.getElementById('moodVal').textContent = state.quick.mood + '%';
+  document.getElementById('sleepVal').textContent = state.quick.sleep + '%';
+}
+function renderSymptoms(){
+  const list = document.getElementById('symList');
+  list.innerHTML = '';
+  state.symptoms.forEach(s=>{
+    const div = document.createElement('div');
+    div.className = 'sym-row';
+    div.innerHTML = `
+      <div>
+        <div class="sym-name">${escapeHtml(s.name)}</div>
+        <div class="sym-level">程度：${s.level} / 5</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" onclick="symAdjust(${s.id}, -1)">-</button>
+        <button class="btn" onclick="symAdjust(${s.id}, 1)">+</button>
+        <button class="btn" onclick="symDel(${s.id})">删除</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+function renderSupps(){
+  const list = document.getElementById('suppList');
+  list.innerHTML = '';
+  state.supplements.forEach((s,i)=>{
+    const c = document.createElement('div');
+    c.className = 'supp-card';
+    c.innerHTML = `
+      <div class="supp-name">${escapeHtml(s.name)}</div>
+      <div class="supp-use">${escapeHtml(s.use)} • ${escapeHtml(s.note)}</div>
+      <div class="supp-core"><strong>核心成分：</strong>${escapeHtml(s.core)}</div>
+      <div style="text-align:right"><button class="btn" onclick="suppAddToPlan(${i})">添加到方案</button></div>
+    `;
+    list.appendChild(c);
+  });
+}
+
+/* ====== helpers ====== */
+function saveState(){ localStorage.setItem('hk_state_v1', JSON.stringify(state)); }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'<','>':'>','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ====== Navigation ====== */
+function navTo(view){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.nav-btn[data-view="${view}"]`).classList.add('active');
+  ['dashboard','knowledge','symptom','plan','supp','report','settings'].forEach(v=>{
+    const el = document.getElementById('view-' + v);
+    if(el) el.style.display = (v===view)?'block':'none';
+  });
+  document.getElementById('main').focus();
+}
+document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click', ()=> navTo(b.dataset.view)));
+
+/* ====== Knowledge Base ====== */
+function selectSystem(system) {
+  document.querySelectorAll('.system-pill').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+}
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+/* ====== Nutrition Plan ====== */
+function switchPhase(phase) {
+  document.querySelectorAll('.meal-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.meal-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('phase-' + phase).classList.add('active');
+}
+function nextMeal(type) {
+  const meals = {
+    'breakfast-acute': ['小米山药粥 + 鸡蛋', '燕麦奶 + 奇亚籽', '全麦面包 + 牛油果'],
+    'lunch-acute': ['糙米 + 鱼', '藜麦 + 豆腐', '红薯 + 希腊沙拉'],
+    'dinner-acute': ['红薯泥 + 豆腐', '清汤面 + 虾', '蒸南瓜 + 鸡胸']
+  };
+  alert(`已切换到 ${type} 的下一个方案`);
+}
+
+/* ====== Supplements ====== */
+function addSupplement(){
+  const name = document.getElementById('newSuppName').value.trim();
+  const core = document.getElementById('newSuppCore').value.trim();
+  if(!name || !core) return alert('请输入名称和核心成分');
+  state.supplements.push({name, core, use:'自定义', note:'用户添加'});
+  document.getElementById('newSuppName').value = '';
+  document.getElementById('newSuppCore').value = '';
+  renderSupps(); saveState();
+}
+
+/* ====== Init ====== */
+renderQuick();
+renderSymptoms();
+renderSupps();
+
+/* ====== Expose ====== */
+window.navTo = navTo;
+window.selectSystem = selectSystem;
+window.switchTab = switchTab;
+window.switchPhase = switchPhase;
+window.nextMeal = nextMeal;
+window.addSupplement = addSupplement;
+</script>
+</body>
+</html>

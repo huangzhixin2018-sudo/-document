@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!-- saved from url=(0064)file:///C:/Users/Administrator/Downloads/%E6%B5%8B%E8%AF%95.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>晚安打卡 - 设计实现规范</title>
+  <script src="./晚安打卡 - 设计实现规范_files/saved_resource"></script>
+  <style>
+    body { background: #f8f9fa; }
+    pre {
+      background: #f1f3f5;
+      padding: 10px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+  </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mt-6{margin-top:1.5rem}.list-decimal{list-style-type:decimal}.list-disc{list-style-type:disc}.p-4{padding:1rem}.pl-6{padding-left:1.5rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-bold{font-weight:700}.font-semibold{font-weight:600}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}</style></head>
+<body class="p-4">
+
+  <h1 class="text-2xl font-bold mb-4">🌙 晚安打卡 - 设计实现规范</h1>
+
+  <h2 class="text-xl font-semibold mt-6 mb-2">1. 页面结构概览 (Vue + Tailwind)</h2>
+  <pre>&lt;template&gt;
+  &lt;div class="max-w-sm mx-auto p-4"&gt;
+    &lt;!-- 统计卡片 --&gt;
+    &lt;div class="flex justify-between mb-4"&gt;
+      &lt;div class="flex-1 bg-white rounded-xl shadow px-4 py-3 text-center mr-2"&gt;
+        &lt;div class="text-2xl font-bold"&gt;0&lt;/div&gt;
+        &lt;div class="text-sm"&gt;打卡天数&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="flex-1 bg-white rounded-xl shadow px-4 py-3 text-center ml-2"&gt;
+        &lt;div class="text-2xl font-bold"&gt;0&lt;/div&gt;
+        &lt;div class="text-sm"&gt;早睡天数&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- 睡眠目标 --&gt;
+    &lt;div class="mb-4"&gt;
+      &lt;div class="font-semibold mb-2"&gt;睡眠目标&lt;/div&gt;
+      &lt;div class="bg-white rounded-xl shadow px-4 py-3 text-center"&gt;23:00 - 8:00&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- 睡前事项 --&gt;
+    &lt;div class="mb-4"&gt;
+      &lt;div class="font-semibold mb-2"&gt;睡前事项&lt;/div&gt;
+      &lt;div class="bg-white rounded-xl shadow px-4 py-3"&gt;
+        &lt;ul&gt;
+          &lt;li class="py-2 border-b"&gt;梳头&lt;/li&gt;
+          &lt;li class="py-2"&gt;冥想&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- 激励名言 --&gt;
+    &lt;div class="bg-white rounded-xl shadow px-4 py-6 text-center text-lg italic font-medium mb-4"&gt;
+      “优质的睡眠，是最好的修复。”
+    &lt;/div&gt;
+
+    &lt;!-- 睡眠记录 --&gt;
+    &lt;div class="bg-white rounded-xl shadow px-4 py-3 mb-24"&gt;
+      &lt;div class="text-center font-semibold mb-2"&gt;睡眠记录&lt;/div&gt;
+      &lt;div class="bg-gray-100 rounded-lg p-3 mb-2 text-sm"&gt;5月23日 入睡时间：23:00 熬夜&lt;/div&gt;
+      &lt;!-- 更多记录... --&gt;
+    &lt;/div&gt;
+
+    &lt;!-- 底部按钮 --&gt;
+    &lt;button class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-black text-white rounded-full px-20 py-4 text-lg font-bold shadow-lg"&gt;
+      晚安打卡
+    &lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+  </pre>
+
+  <h2 class="text-xl font-semibold mt-6 mb-2">2. 设计规范</h2>
+  <ul class="list-disc pl-6 mb-4">
+    <li>背景色：#f8f9fa （灰白色，极简干净）</li>
+    <li>卡片背景：#fff （白色），圆角 xl，阴影 sm~md</li>
+    <li>字体：系统字体 -apple-system，字号根据 Tailwind text-sm ~ text-2xl</li>
+    <li>主要按钮：黑色背景，白色文字，圆角 full，padding x-20 y-4，阴影 lg</li>
+    <li>间距：section 间 margin-bottom: 1rem~1.5rem，卡片 padding: 0.75rem~1rem</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold mt-6 mb-2">3. 小程序迁移实现要点</h2>
+  <ul class="list-decimal pl-6 mb-4">
+    <li>使用 rpx 单位替代 px，实现屏幕自适应</li>
+    <li>flex 布局需在小程序中添加 <code>display: flex</code> 与 <code>flex-direction</code> 属性</li>
+    <li>圆角、阴影需在 app.wxss 或全局 CSS 定义兼容样式</li>
+    <li>按钮使用 <code>button</code> 标签，class 保持 tailwind 命名，或转换为 wxml + wxss 组合</li>
+    <li>固定底部按钮需结合小程序自带 <code>position: fixed; bottom: x rpx;</code> 实现，避免被 tabbar 遮挡</li>
+    <li>名言激励字体可使用 text-lg + font-medium + italic 提升视觉层级</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold mt-6 mb-2">4. 实现建议</h2>
+  <ul class="list-disc pl-6 mb-4">
+    <li>保持白色卡片与灰色背景对比，避免色彩过多</li>
+    <li>使用 margin 和 padding 形成模块分割，减少线条</li>
+    <li>在小程序使用 tailwind，需通过 <a class="text-blue-600" href="https://github.com/sonofmagic/weapp-tailwindcss-webpack-plugin" target="_blank">weapp-tailwindcss-webpack-plugin</a> 编译</li>
+    <li>调试不同屏幕宽度下按钮 padding，避免过宽溢出</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold mt-6 mb-2">5. 总结</h2>
+  <p>
+    此页面设计采用 <strong>乔布斯级极简风格</strong>：留白、黑白灰、圆角、阴影、无装饰线条，提升视觉舒适与产品高级感。迁移到小程序需关注 <strong>单位转换、flex 兼容、全局样式定义</strong>，以保证 UI 一致性。
+  </p>
+
+  <p class="mt-6 text-center text-sm text-gray-500">© 2025 思维空间 - 产品设计文档</p>
+
+
+
+</body></html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>项目化学习平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css    " />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f9f9fb;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .description {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        /* 布局：左侧任务列表 | 右侧上下结构 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+        }
+
+        /* 左侧：任务列表 */
+        .sidebar {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+            font-weight: 600;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            font-size: 0.95rem;
+            color: #34495e;
+        }
+
+        .task-item:hover {
+            background: #e9ecef;
+            color: #2c3e50;
+        }
+
+        .task-item.active {
+            background: #2c3e50;
+            color: white;
+            font-weight: 500;
+        }
+
+        /* 右侧：上下结构 */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* 新增：任务步骤流程 */
+        .task-steps {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .steps-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .steps-table th,
+        .steps-table td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+        }
+
+        .steps-table th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .steps-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .steps-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* 核心函数：每行两个 */
+        .core-functions {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .functions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .function-card {
+            padding: 14px;
+            border: 1px solid #eaeaea;
+            border-radius: 6px;
+            background: #fcfcfc;
+        }
+
+        .function-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .function-desc {
+            color: #555;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .function-usage {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: #f1f3f5;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #1a1a1a;
+            border: 1px solid #ddd;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 实现代码区域 */
+        .code-section {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .code-header span {
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .copy-btn {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-btn:hover {
+            background: #1a2533;
+        }
+
+        .code-container {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 18px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre;
+            overflow-x: auto;
+            color: #1a1a1a;
+            min-height: 200px;
+        }
+
+        /* 响应式：小屏下函数卡片变为一列 */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .functions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 返回按钮样式 */
+        .back-btn {
+            background: #3498db;
+            color: white;
+            border: 1px solid #2980b9;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 20px;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+        }
+        .back-btn:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 返回按钮 -->
+        <button class="back-btn" onclick="history.back()">
+            <i class="fas fa-arrow-left"></i> 返回
+        </button>
+
+        <header>
+            <h1>项目化学习平台</h1>
+            <p class="description">Python 数据处理任务学习与实践</p>
+        </header>
+
+        <div class="main-content">
+            <!-- 左侧：任务流程 -->
+            <div class="sidebar">
+                <h2 class="section-title">任务流程</h2>
+                <ul class="task-list" id="taskList">
+                    <!-- 由 JS 生成 -->
+                </ul>
+            </div>
+
+            <!-- 右侧：上下结构 -->
+            <div class="right-panel">
+                <!-- 新增：任务步骤流程 -->
+                <div class="task-steps">
+                    <h2 class="section-title">任务步骤流程</h2>
+                    <table class="steps-table" id="stepsTable">
+                        <thead>
+                            <tr>
+                                <th>步骤</th>
+                                <th>输入</th>
+                                <th>输出</th>
+                                <th>操作</th>
+                                <th>任务描述</th>
+                                <th>数据结构变化</th>
+                                <th>状态流</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 由 JS 生成 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 核心函数 -->
+                <div class="core-functions">
+                    <h2 class="section-title">核心函数</h2>
+                    <div class="functions-grid" id="coreFunctions">
+                        <p style="color: #999; grid-column: span 2; text-align: center;">
+                            选择一个任务查看核心函数
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 实现代码 -->
+                <div class="code-section">
+                    <h2 class="section-title">实现代码</h2>
+                    <div class="code-header">
+                        <span>当前任务的完整实现代码</span>
+                        <button class="copy-btn" id="copyCodeBtn">
+                            <i class="far fa-copy"></i> 复制
+                        </button>
+                    </div>
+                    <div class="code-container" id="codeDisplay">
+// 请选择左侧任务
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tasks = [
+            {
+                name: "读取 Excel 文件到内存",
+                steps: [
+                    { step: 1, input: "Excel 文件路径", output: "DataFrame", operation: "读取", description: "加载 Excel 数据", dataChange: "文件 → DataFrame", stateFlow: "未加载 → 已加载" },
+                    { step: 2, input: "DataFrame", output: "清洗后 DataFrame", operation: "清洗", description: "填充缺失值，标准化列名", dataChange: "DataFrame → DataFrame", stateFlow: "未清洗 → 已清洗" }
+                ],
+                code: `import pandas as pd
+
+# 读取 Excel 文件
+df = pd.read_excel("数据.xlsx")
+
+# 预览数据
+print("数据预览:")
+print(df.head())
+
+# 填充缺失值并标准化列名
+df_clean = df.fillna(0)
+df_clean.columns = df_clean.columns.str.strip().str.lower()
+
+print("\\n处理后数据:")
+print(df_clean.head())`,
+                coreFunctions: [
+                    {
+                        name: "pd.read_excel()",
+                        description: "从 Excel 文件读取数据生成 DataFrame",
+                        usage: "pd.read_excel('文件.xlsx')"
+                    },
+                    {
+                        name: "fillna()",
+                        description: "填充缺失值（NaN）",
+                        usage: "df.fillna(0)"
+                    }
+                ]
+            },
+            {
+                name: "按逗号拆分指定列",
+                steps: [
+                    { step: 1, input: "技能列", output: "拆分后的多列", operation: "拆分", description: "按逗号拆分字符串", dataChange: "单列 → 多列", stateFlow: "未拆分 → 已拆分" },
+                    { step: 2, input: "原表 + 新列", output: "合并后表", operation: "拼接", description: "合并并删除原列", dataChange: "列数增加", stateFlow: "更新完成" }
+                ],
+                code: `import pandas as pd
+
+# 示例数据
+data = {'姓名': ['张三', '李四'], '技能': ['Python,SQL', 'Java,JS']}
+df = pd.DataFrame(data)
+
+# 拆分技能列
+split_cols = df['技能'].str.split(',', expand=True)
+split_cols.columns = ['技能1', '技能2']
+
+# 合并并删除原列
+df = pd.concat([df, split_cols], axis=1).drop(columns=['技能'])
+
+print(df)`,
+                coreFunctions: [
+                    {
+                        name: "str.split(',', expand=True)",
+                        description: "将字符串列按逗号拆分为多列",
+                        usage: "df['技能'].str.split(',', expand=True)"
+                    },
+                    {
+                        name: "pd.concat()",
+                        description: "沿列方向拼接 DataFrame",
+                        usage: "pd.concat([df1, df2], axis=1)"
+                    }
+                ]
+            },
+            {
+                name: "数据筛选与排序",
+                steps: [
+                    { step: 1, input: "DataFrame, 条件", output: "筛选结果", operation: "条件筛选", description: "筛选符合条件的行", dataChange: "全量 → 子集", stateFlow: "未筛选 → 已筛选" },
+                    { step: 2, input: "DataFrame", output: "排序后数据", operation: "排序", description: "按工资降序排列", dataChange: "无序 → 有序", stateFlow: "未排序 → 已排序" }
+                ],
+                code: `import pandas as pd
+
+# 示例数据
+data = {'姓名': ['张三', '李四', '王五'], '年龄': [25, 32, 28], '工资': [5000, 8000, 6000]}
+df = pd.DataFrame(data)
+
+# 筛选年龄大于30的员工
+filtered = df[df['年龄'] > 30]
+
+# 按工资降序排序
+sorted_df = df.sort_values('工资', ascending=False)
+
+print("筛选结果:")
+print(filtered)
+print("\\n排序结果:")
+print(sorted_df)`,
+                coreFunctions: [
+                    {
+                        name: "条件筛选 df[条件]",
+                        description: "使用布尔表达式筛选行",
+                        usage: "df[df['年龄'] > 30]"
+                    },
+                    {
+                        name: "sort_values()",
+                        description: "按列排序数据",
+                        usage: "df.sort_values('工资', ascending=False)"
+                    }
+                ]
+            },
+            // 新增的任务：分组与聚合
+            {
+                name: "数据分组与聚合",
+                steps: [
+                    { step: 1, input: "DataFrame, 分组列名", output: "GroupBy对象", operation: "分组", description: "按指定列对数据进行分组", dataChange: "整体数据 -> 分组数据", stateFlow: "未分组 -> 已分组" },
+                    { step: 2, input: "GroupBy对象, 聚合函数", output: "聚合结果DataFrame", operation: "聚合", description: "对分组数据应用聚合函数", dataChange: "分组数据 -> 聚合结果", stateFlow: "已分组 -> 已聚合" }
+                ],
+                code: `import pandas as pd
+
+# 示例数据
+data = {
+    '部门': ['销售', '技术', '销售', '技术', '人事'],
+    '姓名': ['张三', '李四', '王五', '赵六', '钱七'],
+    '工资': [5000, 8000, 6000, 9000, 4000],
+    '年龄': [25, 32, 28, 35, 30]
+}
+df = pd.DataFrame(data)
+
+# 按部门分组，并计算工资和年龄的平均值
+grouped = df.groupby('部门')
+result = grouped[['工资', '年龄']].agg(['mean', 'count'])
+
+print("分组聚合结果:")
+print(result)`,
+                coreFunctions: [
+                    {
+                        name: "groupby()",
+                        description: "根据指定列的值对数据进行分组",
+                        usage: "df.groupby('部门')"
+                    },
+                    {
+                        name: "agg()",
+                        description: "对分组数据应用一个或多个聚合函数",
+                        usage: "grouped.agg(['sum', 'mean'])"
+                    }
+                ]
+            }
+        ];
+
+        const taskList = document.getElementById("taskList");
+        const stepsTable = document.getElementById("stepsTable").querySelector("tbody");
+        const coreFunctions = document.getElementById("coreFunctions");
+        const codeDisplay = document.getElementById("codeDisplay");
+        const copyCodeBtn = document.getElementById("copyCodeBtn");
+
+        // 生成任务列表
+        tasks.forEach((task, index) => {
+            const li = document.createElement("li");
+            li.className = "task-item";
+            li.textContent = task.name;
+            li.onclick = () => showTask(index);
+            taskList.appendChild(li);
+        });
+
+        // 显示任务
+        function showTask(index) {
+            // 更新任务选中状态
+            document.querySelectorAll(".task-item").forEach(item => item.classList.remove("active"));
+            document.querySelectorAll(".task-item")[index].classList.add("active");
+
+            const task = tasks[index];
+
+            // 显示任务步骤流程
+            let stepsHtml = '';
+            task.steps.forEach(step => {
+                stepsHtml += `
+                    <tr>
+                        <td>${step.step}</td>
+                        <td>${step.input}</td>
+                        <td>${step.output}</td>
+                        <td><strong>${step.operation}</strong></td>
+                        <td>${step.description}</td>
+                        <td>${step.dataChange}</td>
+                        <td>${step.stateFlow}</td>
+                    </tr>
+                `;
+            });
+            stepsTable.innerHTML = stepsHtml;
+
+            // 显示核心函数（每行两个）
+            let html = '';
+            task.coreFunctions.forEach(func => {
+                html += `
+                    <div class="function-card">
+                        <div class="function-title">${func.name}</div>
+                        <div class="function-desc">${func.description}</div>
+                        <div class="function-usage">${func.usage}</div>
+                    </div>
+                `;
+            });
+            coreFunctions.innerHTML = html;
+
+            // 显示代码
+            codeDisplay.textContent = task.code;
+        }
+
+        // 复制代码
+        copyCodeBtn.addEventListener("click", () => {
+            const code = codeDisplay.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const icon = copyCodeBtn.querySelector("i");
+                const textNode = copyCodeBtn.childNodes[2];
+                icon.className = "fas fa-check";
+                textNode.textContent = " 已复制";
+                setTimeout(() => {
+                    icon.className = "far fa-copy";
+                    textNode.textContent = " 复制";
+                }, 2000);
+            }).catch(() => {
+                alert("复制失败，请手动选择复制");
+            });
+        });
+
+        // 默认加载第一个任务
+        if (tasks.length > 0) {
+            showTask(0);
+        }
+    </script>
+</body>
+</html>

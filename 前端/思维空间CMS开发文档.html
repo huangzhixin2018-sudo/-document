@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思维空间CMS开发文档</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --text-color: #2b2d42;
+            --light-text: #8d99ae;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        h1, h2, h3 {
+            color: var(--secondary-color);
+            margin-top: 2rem;
+        }
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        code {
+            background: #f5f7fa;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .schema {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .relation-diagram {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: var(--border-radius);
+        }
+    </style>
+</head>
+<body>
+    <h1>思维空间CMS开发文档</h1>
+
+    <div class="card">
+        <h2>一、数据模型设计</h2>
+        
+        <h3>1.1 核心数据表结构</h3>
+        
+        <div class="relation-diagram">
+            <strong>实体关系图：</strong>
+            <img src="data:image/svg+xml;base64,..." alt="ER Diagram">
+            <small>[图示说明] 分类-内容-导航的关联关系</small>
+        </div>
+
+        <h4>分类表 (categories)</h4>
+        <table>
+            <tr>
+                <th>字段</th>
+                <th>类型</th>
+                <th>说明</th>
+                <th>关联关系</th>
+            </tr>
+            <tr>
+                <td>id</td>
+                <td>Integer (PK)</td>
+                <td>唯一标识</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>name</td>
+                <td>String</td>
+                <td>分类名称（如"Python教程"）</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>parent_id</td>
+                <td>Integer (FK)</td>
+                <td>父分类ID</td>
+                <td>self-reference</td>
+            </tr>
+            <tr>
+                <td>is_nav</td>
+                <td>Boolean</td>
+                <td>是否显示在导航</td>
+                <td>→ nav_items</td>
+            </tr>
+            <tr>
+                <td>order</td>
+                <td>Integer</td>
+                <td>排序权重</td>
+                <td>-</td>
+            </tr>
+        </table>
+
+        <h4>文章/教程表 (articles)</h4>
+        <table>
+            <tr>
+                <th>字段</th>
+                <th>类型</th>
+                <th>说明</th>
+                <th>关联关系</th>
+            </tr>
+            <tr>
+                <td>id</td>
+                <td>Integer (PK)</td>
+                <td>唯一标识</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>title</td>
+                <td>String</td>
+                <td>文章标题</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>content</td>
+                <td>Text</td>
+                <td>Markdown格式内容</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>category_id</td>
+                <td>Integer (FK)</td>
+                <td>所属分类</td>
+                <td>→ categories</td>
+            </tr>
+            <tr>
+                <td>seo_description</td>
+                <td>String</td>
+                <td>SEO描述</td>
+                <td>-</td>
+            </tr>
+        </table>
+
+        <h4>导航项表 (nav_items)</h4>
+        <table>
+            <tr>
+                <th>字段</th>
+                <th>类型</th>
+                <th>说明</th>
+                <th>关联关系</th>
+            </tr>
+            <tr>
+                <td>id</td>
+                <td>Integer (PK)</td>
+                <td>唯一标识</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>display_name</td>
+                <td>String</td>
+                <td>导航显示名称（可不同于分类名）</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>link_type</td>
+                <td>Enum</td>
+                <td>['category','custom','page']</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>related_id</td>
+                <td>Integer</td>
+                <td>根据link_type关联不同表</td>
+                <td>动态关联</td>
+            </tr>
+            <tr>
+                <td>order</td>
+                <td>Integer</td>
+                <td>排序权重</td>
+                <td>-</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>二、功能映射关系</h2>
+        
+        <h3>2.1 分类管理 → 导航生成</h3>
+        <div class="schema">
+// 自动生成导航项逻辑
+if (category.is_nav) {
+    NavItem.upsert({
+        display_name: category.name,
+        link_type: 'category',
+        related_id: category.id,
+        order: category.order
+    })
+}
+        </div>
+
+        <h3>2.2 内容关联流程</h3>
+        <ol>
+            <li><strong>创建分类</strong>：建立内容容器（如"Django教程"）</li>
+            <li><strong>添加文章</strong>：关联到具体分类（如"MTV模式详解"）</li>
+            <li><strong>配置导航</strong>：
+                <ul>
+                    <li>方式一：通过分类的<code>is_nav</code>自动生成</li>
+                    <li>方式二：在导航管理手动关联</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h3>2.3 数据流动示意图</h3>
+        <pre>
+[分类管理]
+  │
+  ├─ 设置is_nav → [导航表]
+  │
+  └─ 创建分类 → [文章管理]
+       │
+       └─ 选择分类 → 建立外键关联</pre>
+    </div>
+
+    <div class="card">
+        <h2>三、关键业务逻辑</h2>
+        
+        <h3>3.1 导航渲染逻辑</h3>
+        <div class="schema">
+// 获取导航项（包含分类信息）
+const navItems = await NavItem.findAll({
+    include: [
+        {
+            model: Category,
+            where: { is_nav: true },
+            required: false
+        }
+    ],
+    order: [['order', 'ASC']]
+})
+
+// 前端渲染示例
+&lt;nav&gt;
+    {navItems.map(item => (
+        &lt;a href={getLink(item)} class={isActive(item)}&gt;
+            {item.display_name}
+        &lt;/a&gt;
+    ))}
+&lt;/nav&gt;
+        </div>
+
+        <h3>3.2 分类树构建算法</h3>
+        <table>
+            <tr>
+                <th>步骤</th>
+                <th>操作</th>
+                <th>SQL示例</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>获取所有分类</td>
+                <td><code>SELECT * FROM categories ORDER BY parent_id, order</code></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>构建树形结构</td>
+                <td colspan="2">
+                    <pre>
+function buildTree(items, parentId = null) {
+  return items
+    .filter(item => item.parent_id === parentId)
+    .map(item => ({
+      ...item,
+      children: buildTree(items, item.id)
+    }))
+}</pre>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>四、管理界面操作说明</h2>
+        
+        <h3>4.1 分类管理</h3>
+        <table>
+            <tr>
+                <th>字段</th>
+                <th>后台表单控件</th>
+                <th>存储位置</th>
+                <th>前端影响</th>
+            </tr>
+            <tr>
+                <td>name</td>
+                <td>文本输入框</td>
+                <td>categories.name</td>
+                <td>分类标题显示</td>
+            </tr>
+            <tr>
+                <td>is_nav</td>
+                <td>开关控件</td>
+                <td>categories.is_nav</td>
+                <td>控制是否生成导航项</td>
+            </tr>
+            <tr>
+                <td>order</td>
+                <td>数字输入框</td>
+                <td>categories.order</td>
+                <td>分类排序位置</td>
+            </tr>
+        </table>
+
+        <h3>4.2 导航管理</h3>
+        <table>
+            <tr>
+                <th>操作</th>
+                <th>数据变更</th>
+                <th>关联影响</th>
+            </tr>
+            <tr>
+                <td>修改显示名称</td>
+                <td>更新nav_items.display_name</td>
+                <td>仅影响导航文本显示</td>
+            </tr>
+            <tr>
+                <td>更换关联分类</td>
+                <td>更新nav_items.related_id</td>
+                <td>导航点击跳转到新分类</td>
+            </tr>
+            <tr>
+                <td>调整排序</td>
+                <td>更新nav_items.order</td>
+                <td>改变导航栏项位置</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

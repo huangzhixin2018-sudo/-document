@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>早起打卡</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: #f8f9fa;
+      color: #333;
+    }
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      flex: 1;
+      margin: 0 5px;
+      padding: 15px;
+      text-align: center;
+    }
+    .card:first-child {
+      margin-left: 0;
+    }
+    .card:last-child {
+      margin-right: 0;
+    }
+    .card .num {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .quote {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 16px;
+      font-style: italic;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .history {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 80px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .history h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    .history ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .history li {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+    .history li:last-child {
+      border-bottom: none;
+    }
+    .checkin-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      padding: 15px 60px;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .checkin-btn:active {
+      background: #444;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="stats">
+    <div class="card">
+      <div class="num" id="totalDays">0</div>
+      <div>打卡天数</div>
+    </div>
+    <div class="card">
+      <div class="num" id="earlyDays">0</div>
+      <div>早起天数</div>
+    </div>
+  </div>
+
+  <div class="quote" id="quote">
+    “每一个清晨，都是通往梦想的起点。”
+  </div>
+
+  <div class="history">
+    <h3>打卡历史</h3>
+    <ul id="historyList">
+      <li>暂无打卡记录</li>
+    </ul>
+  </div>
+</div>
+
+<button class="checkin-btn" onclick="checkIn()">早起打卡</button>
+
+<script>
+  let totalDays = 0;
+  let earlyDays = 0;
+
+  function checkIn() {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'});
+    totalDays += 1;
+    earlyDays += 1; // 简化逻辑，假定每次都是早起
+    document.getElementById('totalDays').innerText = totalDays;
+    document.getElementById('earlyDays').innerText = earlyDays;
+
+    const list = document.getElementById('historyList');
+    if (list.children[0].innerText === '暂无打卡记录') {
+      list.innerHTML = '';
+    }
+    const li = document.createElement('li');
+    li.innerText = '打卡于 ' + timeStr;
+    list.prepend(li);
+
+    alert('打卡完成！时间：' + timeStr);
+  }
+</script>
+
+</body>
+</html>

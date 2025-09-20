@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>常见数据操作分类汇总</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; display: flex; }
+    nav { width: 260px; background: #f9f9f9; border-right: 1px solid #ddd; padding: 20px; height: 100vh; overflow-y: auto; }
+    main { flex: 1; padding: 30px; overflow-y: auto; }
+    h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    h2 { font-size: 1.4rem; margin-top: 2rem; color: #333; }
+    p { margin: 0.5rem 0; line-height: 1.6; }
+    ul { padding-left: 1.2rem; margin: 0.5rem 0; }
+    li { margin-bottom: 0.3rem; }
+    code { background: #eef; padding: 2px 4px; border-radius: 4px; font-family: monospace; }
+    /* 高亮颜色 */
+    .color-read { color: #d35400; }
+    .color-write { color: #27ae60; }
+    .color-transform { color: #2980b9; }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>数据操作总览</h1>
+    <ul>
+      <li><a href="#query">查询（Query / Read）</a></li>
+      <li><a href="#insert">插入（Insert）</a></li>
+      <li><a href="#aggregate">汇总（Aggregate）</a></li>
+      <li><a href="#split">拆分（Split）</a></li>
+      <li><a href="#transform">变更（Transform）</a></li>
+      <li><a href="#filter">过滤（Filter）</a></li>
+      <li><a href="#sort">排序（Sort）</a></li>
+      <li><a href="#join">连接（Join/Merge）</a></li>
+      <li><a href="#clean">清洗（Clean）</a></li>
+      <li><a href="#delete">删除（Delete）</a></li>
+      <li><a href="#pandas">Pandas 特定操作示例</a></li>
+    </ul>
+  </nav>
+  <main>
+    <h1>常见数据操作分类与子操作</h1>
+
+    <section id="query">
+      <h2>查询（<span class="color-read">Query / Read</span>）</h2>
+      <p><strong>子操作：</strong>全表查询、指定列查询、条件查询、范围查询、模糊匹配、组合条件、排序与分页、聚合查询、连接查询、子查询、集合运算</p>
+    </section>
+
+    <section id="insert">
+      <h2>插入（<span class="color-write">Insert</span>）</h2>
+      <p><strong>子操作：</strong>插入列、插入特定的列、插入特定的值、插入行、插入索引/主键列、插入派生列</p>
+    </section>
+
+    <section id="aggregate">
+      <h2>汇总（<span class="color-transform">Aggregate / Summarize</span>）</h2>
+      <p><strong>子操作：</strong>汇总特定的表、汇总数据、合并成一条数据、透视汇总、分级汇总、累计/移动汇总</p>
+    </section>
+
+    <section id="split">
+      <h2>拆分（<span class="color-transform">Split / Explode</span>）</h2>
+      <p><strong>子操作：</strong>一行拆成多行、字段拆分、日期拆分、交叉拆分（Unpivot）、复杂结构拆分</p>
+    </section>
+
+    <section id="transform">
+      <h2>变更（<span class="color-transform">Transform</span>）</h2>
+      <p><strong>子操作：</strong>类型转换、归一化、映射替换、计算派生字段、单位转换、函数映射</p>
+    </section>
+
+    <section id="filter">
+      <h2>过滤（Filter）</h2>
+      <p><strong>子操作：</strong>精确匹配保留/剔除、范围过滤、模糊匹配过滤、多条件组合、NULL/空值过滤</p>
+    </section>
+
+    <section id="sort">
+      <h2>排序（Sort）</h2>
+      <p><strong>子操作：</strong>单列排序、多列排序、自定义排序规则、随机排序、分页排序</p>
+    </section>
+
+    <section id="join">
+      <h2>连接（Join/Merge）</h2>
+      <p><strong>子操作：</strong>内连接、左连接、右连接、全外连接、交叉连接、自连接、关键字补全</p>
+    </section>
+
+    <section id="clean">
+      <h2>清洗（Clean）</h2>
+      <p><strong>子操作：</strong>去重、去空、脱敏、异常值处理、格式校验、数据补全</p>
+    </section>
+
+    <section id="delete">
+      <h2>删除（Delete）</h2>
+      <p><strong>子操作：</strong>按条件删除行、删除列、截断表、删除表、级联删除</p>
+    </section>
+
+    <section id="pandas">
+      <h2>Pandas 特定操作示例</h2>
+      <ul>
+        <li><span class="color-read">读取：</span>df.head(), df.tail(), df.loc[], df.at[], df.query()</li>
+        <li><span class="color-write">创建/插入：</span>df.insert(), df.assign(), df['new']=value, df.append()</li>
+        <li><span class="color-transform">运算：</span>df.add(), df.sub(), df.groupby(), df.apply(), df.merge()</li>
+        <li><span class="color-clean">清洗：</span>df.dropna(), df.fillna(), df.replace(), df.drop_duplicates()</li>
+        <li><span class="color-split">重塑：</span>df.pivot(), df.melt(), df.explode(), df.stack(), df.unstack()</li>
+      </ul>
+    </section>
+
+  </main>
+</body>
+</html>

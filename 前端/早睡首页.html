@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<!-- saved from url=(0027)file:///D:/sleep-buddy.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>早睡打卡 · 睡眠搭子</title>
+  <style>
+    :root{
+      --bg:#f7f7fb;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --primary:#111111;
+      --accent:#2563eb;
+      --success:#10b981;
+      --warning:#f59e0b;
+      --danger:#ef4444;
+      --radius:16px;
+      --shadow:0 6px 18px rgba(0,0,0,.06);
+    }
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: -apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","WenQuanYi Micro Hei","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+      color:var(--text);
+      background:var(--bg);
+    }
+    .app{
+      max-width:390px; /* iPhone 13 width */
+      margin:0 auto;
+      padding-bottom:100px;
+    }
+    header{
+      position:sticky; top:0; z-index:5;
+      background:var(--bg);
+      padding:16px 20px 8px;
+    }
+    header h1{ margin:0; font-size:22px; font-weight:700; text-align:center; }
+    .grid{ display:grid; gap:14px; }
+    .grid-2{ grid-template-columns:1fr 1fr; }
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .stat{
+      text-align:center;
+      padding:18px 12px;
+    }
+    .stat .num{font-size:40px; font-weight:800; line-height:1;}
+    .stat .label{color:var(--muted); margin-top:6px; font-size:14px;}
+    .section-title{
+      font-weight:800; font-size:18px; padding:8px 4px 4px;
+    }
+    .goal{
+      display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:center;
+    }
+    .goal .cell{ background:#fafafa; border-radius:12px; padding:12px;}
+    .goal .small{ color:var(--muted); font-size:12px;}
+    .goal .big{ font-size:24px; font-weight:800; margin-top:6px; }
+    .chips{ display:flex; flex-wrap:wrap; gap:10px; }
+    .chip{
+      padding:10px 14px; border-radius:9999px; background:#f9fafb;
+      border:1px solid #eef0f3; font-size:14px;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
+    }
+    .quote{ font-size:20px; line-height:1.6; }
+    .quote small{ display:block; color:var(--muted); margin-top:12px; }
+    .list .item{
+      background:var(--card); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow);
+    }
+    .list{ display:grid; gap:10px; }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      background:var(--primary); color:#fff; padding:14px 18px; border:none; border-radius:9999px;
+      font-size:16px; font-weight:700; cursor:pointer;
+    }
+    .btn.secondary{ background:#111827; }
+    .btn.outline{ background:#fff; color:#111; border:1px solid #e5e7eb; }
+    .btn.icon{ gap:8px; }
+    .btn.small{ padding:8px 12px; font-size:14px; border-radius:12px;}
+    .pill{ padding:4px 8px; border-radius:999px; font-size:12px; color:#fff; }
+    .pill.wait{ background:var(--warning); }
+    .pill.ok{ background:var(--success); }
+    .bar{
+      position:fixed; left:0; right:0; bottom:16px; display:flex; justify-content:center; z-index:10;
+    }
+    .bar .btn{ width:min(360px, 92%); height:56px; font-size:18px; }
+    .row{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .sub{ color:var(--muted); font-size:13px; }
+    .buddy-card .desc{ color:var(--muted); font-size:13px; margin-top:6px;}
+    .buddy-list{ display:grid; gap:10px; margin-top:10px;}
+    .buddy{
+      display:flex; gap:10px; align-items:center; padding:12px; border:1px solid #eef0f3; border-radius:12px; background:#fff;
+    }
+    .avatar{
+      width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#dbeafe,#e9d5ff);
+      display:flex; align-items:center; justify-content:center; font-weight:800;
+    }
+    .toggle{
+      position:relative; width:46px; height:26px; background:#e5e7eb; border-radius:20px; cursor:pointer;
+    }
+    .toggle input{ display:none; }
+    .toggle span{
+      position:absolute; top:3px; left:3px; width:20px; height:20px; background:#fff; border-radius:50%; transition:.2s;
+      box-shadow:0 1px 3px rgba(0,0,0,.2);
+    }
+    .toggle input:checked + span{ left:23px; background:var(--success); }
+    /* Bottom Sheet */
+    .sheet{
+      position:fixed; left:0; right:0; bottom:-100%; background:#fff; border-radius:16px 16px 0 0; box-shadow:0 -10px 30px rgba(0,0,0,.15);
+      padding:16px; transition:bottom .25s ease; z-index:20; max-width:390px; margin:0 auto;
+    }
+    .sheet.open{ bottom:0; }
+    .field{ display:grid; gap:6px; margin:10px 0; }
+    .field label{ font-size:13px; color:var(--muted); }
+    .field input, .field select, .field textarea{
+      width:100%; padding:12px; border-radius:12px; border:1px solid #e5e7eb; background:#fafafa; font-size:14px;
+    }
+    .actions{ display:flex; gap:10px; }
+    .close{ position:absolute; right:14px; top:10px; background:#f3f4f6; border:none; width:34px; height:34px; border-radius:10px; font-size:18px; }
+    canvas{ width:100%; height:180px; background:#f9fafb; border:1px dashed #e5e7eb; border-radius:12px; }
+    .hint{ font-size:12px; color:var(--muted); margin-top:6px;}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="row">
+        <div class="sub">8:49</div>
+        <h1>早睡打卡</h1>
+        <div style="width:40px"></div>
+      </div>
+    </header>
+
+    <main style="padding: 0 16px 16px;">
+      <section class="grid grid-2">
+        <div class="card stat">
+          <div class="num" id="earlyDays">0</div>
+          <div class="label">早睡天数</div>
+        </div>
+        <div class="card stat">
+          <div class="num" id="lateDays">8</div>
+          <div class="label">熬夜天数</div>
+        </div>
+      </section>
+
+      <div class="section-title">睡眠目标</div>
+      <section class="card goal">
+        <div class="cell">
+          <div class="small">目标就寝时间</div>
+          <div class="big" id="targetBed">23:00</div>
+        </div>
+        <div class="cell">
+          <div class="small">本月最晚入睡</div>
+          <div class="big">00:16</div>
+        </div>
+      </section>
+
+      <!-- 新功能：邀请睡眠搭子 -->
+      <div class="section-title">睡眠搭子</div>
+      <section class="card buddy-card">
+        <div class="row">
+          <div>
+            <div style="font-weight:700;">邀请睡眠搭子</div>
+            <div class="desc">和朋友一起早睡更容易坚持。设置共同目标、互相提醒、同步打卡。</div>
+          </div>
+          <button class="btn small icon" id="openSheetBtn" aria-label="发起邀请">➕ 发起邀请</button>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="sub">“同步打卡”</div>
+          <label class="toggle">
+            <input id="syncToggle" type="checkbox" checked="">
+            <span></span>
+          </label>
+        </div>
+
+        <div class="buddy-list" id="buddyList">
+          <!-- 示例搭子 -->
+          <div class="buddy">
+            <div class="avatar">Q</div>
+            <div style="flex:1;">
+              <div class="row">
+                <div style="font-weight:700;">阿青</div>
+                <span class="pill ok">已加入</span>
+              </div>
+              <div class="sub">目标 23:00 · 提醒：睡前30分钟</div>
+            </div>
+            <button class="btn small outline" onclick="nudge(&#39;阿青&#39;)">提醒</button>
+          </div>
+          <div class="buddy">
+            <div class="avatar">M</div>
+            <div style="flex:1;">
+              <div class="row">
+                <div style="font-weight:700;">木木</div>
+                <span class="pill wait">待接受</span>
+              </div>
+              <div class="sub">邀请已发送 · 有效期48小时</div>
+            </div>
+            <button class="btn small" onclick="copyLink()">复制链接</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-title">睡前事项</div>
+      <section class="card">
+        <div class="chips">
+          <div class="chip">远离手机</div>
+          <div class="chip">睡前阅读</div>
+          <div class="chip">正念冥想</div>
+        </div>
+      </section>
+
+      <div class="card quote" style="margin-top:14px;">
+        你走得慢没关系，只要不原地踏步就好。
+        <small>—— 电影《追梦赤子心》</small>
+      </div>
+
+      <div class="section-title">最近一周睡眠记录</div>
+      <section class="list">
+        <div class="item">8月13日 入睡时间：00:04 晚睡</div>
+        <div class="item">8月12日 入睡时间：00:16 晚睡</div>
+        <div class="item">8月10日 入睡时间：23:04 晚睡</div>
+      </section>
+    </main>
+
+    <div class="bar">
+      <button class="btn">晚安打卡</button>
+    </div>
+  </div>
+
+  <!-- 发起邀请 Bottom Sheet -->
+  <div id="sheet" class="sheet" role="dialog" aria-modal="true" aria-label="发起睡眠搭子邀请">
+    <button class="close" id="closeSheet" aria-label="关闭">✕</button>
+    <h3 style="margin:4px 0 6px; font-size:18px;">发起邀请</h3>
+    <div class="sub">设置共同目标并分享邀请链接给好友</div>
+
+    <div class="field">
+      <label for="nickname">对方昵称（可选）</label>
+      <input id="nickname" placeholder="比如：阿青">
+    </div>
+
+    <div class="field">
+      <label for="goalTime">共同就寝目标</label>
+      <input id="goalTime" type="time" value="23:00">
+    </div>
+
+    <div class="field">
+      <label for="days">挑战天数</label>
+      <select id="days">
+        <option value="7">7 天</option>
+        <option value="14">14 天</option>
+        <option value="21">21 天</option>
+        <option value="30">30 天</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="remind">提醒方式</label>
+      <select id="remind">
+        <option value="30">睡前30分钟</option>
+        <option value="15">睡前15分钟</option>
+        <option value="0">到点提醒</option>
+      </select>
+      <div class="hint">仅为原型示例：本页面内会模拟“提醒”效果</div>
+    </div>
+
+    <div class="actions" style="margin-top:10px;">
+      <button class="btn icon" id="createInvite">生成邀请</button>
+      <button class="btn outline" id="shareBtn">复制链接</button>
+    </div>
+
+    <div class="field">
+      <label>邀请二维码（示意）</label>
+      <canvas id="qr"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const openSheetBtn = document.getElementById('openSheetBtn');
+    const sheet = document.getElementById('sheet');
+    const closeSheet = document.getElementById('closeSheet');
+    const shareBtn = document.getElementById('shareBtn');
+    const createInvite = document.getElementById('createInvite');
+    const qrCanvas = document.getElementById('qr');
+    const goalTimeInput = document.getElementById('goalTime');
+    const buddyList = document.getElementById('buddyList');
+
+    openSheetBtn.addEventListener('click', () => sheet.classList.add('open'));
+    closeSheet.addEventListener('click', () => sheet.classList.remove('open'));
+
+    function mockQRCode(text){
+      const c = qrCanvas;
+      const ctx = c.getContext('2d');
+      const w = c.width = c.offsetWidth * devicePixelRatio;
+      const h = c.height = c.offsetHeight * devicePixelRatio;
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,w,h);
+      // draw simple fake qr blocks
+      ctx.fillStyle = '#111111';
+      const size = Math.min(w,h);
+      const n = 21; // 21x21 modules
+      const step = size / n;
+      for(let i=0;i<n;i++){
+        for(let j=0;j<n;j++){
+          // random-looking pattern seeded by text length
+          const seed = (i*7 + j*13 + text.length*17) % 11;
+          if((seed % 3) === 0) ctx.fillRect(Math.round(j*step), Math.round(i*step), Math.ceil(step-2), Math.ceil(step-2));
+        }
+      }
+      // finder patterns
+      function finder(x,y){
+        ctx.fillStyle='#000'; ctx.fillRect(x,y,step*7,step*7);
+        ctx.fillStyle='#fff'; ctx.fillRect(x+step,y+step,step*5,step*5);
+        ctx.fillStyle='#000'; ctx.fillRect(x+step*2,y+step*2,step*3,step*3);
+      }
+      finder(step,step); finder(step*(n-8),step); finder(step,step*(n-8));
+    }
+
+    function copyToClipboard(text){
+      if(navigator.clipboard){
+        navigator.clipboard.writeText(text);
+        alert('邀请链接已复制：\\n' + text);
+      }else{
+        prompt('复制以下链接', text);
+      }
+    }
+
+    function createLink(){
+      const nick = document.getElementById('nickname').value || '好友';
+      const days = document.getElementById('days').value;
+      const remind = document.getElementById('remind').value;
+      const t = goalTimeInput.value || '23:00';
+      const code = Math.random().toString(36).slice(2,8).toUpperCase();
+      const link = `https://sleep.app/invite?code=${code}&time=${encodeURIComponent(t)}&days=${days}&r=${remind}`;
+      mockQRCode(link);
+      // add to list
+      const node = document.createElement('div');
+      node.className='buddy';
+      node.innerHTML = \`
+        <div class="avatar">\${nick[0]}</div>
+        <div style="flex:1;">
+          <div class="row">
+            <div style="font-weight:700;">\${nick}</div>
+            <span class="pill wait">待接受</span>
+          </div>
+          <div class="sub">目标 \${t} · 提醒：睡前\${remind}分钟 · \${days}天挑战</div>
+        </div>
+        <button class="btn small" onclick="copyLink()">复制链接</button>
+      \`;
+      buddyList.prepend(node);
+      return link;
+    }
+
+    createInvite.addEventListener('click', () => {
+      const link = createLink();
+      copyToClipboard(link);
+    });
+
+    shareBtn.addEventListener('click', () => {
+      const link = createLink();
+      copyToClipboard(link);
+    });
+
+    function copyLink(){
+      const t = goalTimeInput.value || '23:00';
+      const link = `https://sleep.app/invite?time=${encodeURIComponent(t)}`;
+      copyToClipboard(link);
+    }
+
+    function nudge(name){
+      alert('已向『' + name + '』发送“早点休息”的提醒（示意）');
+    }
+
+    // render default QR on load
+    mockQRCode('https://sleep.app/invite?time=23:00');
+  </script>
+
+
+</body></html>

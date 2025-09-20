@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>晚安打卡</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: #f8f9fa;
+      color: #333;
+    }
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      flex: 1;
+      margin: 0 5px;
+      padding: 15px;
+      text-align: center;
+    }
+    .card:first-child {
+      margin-left: 0;
+    }
+    .card:last-child {
+      margin-right: 0;
+    }
+    .card .num {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .section-title {
+      font-size: 16px;
+      margin: 25px 0 10px 0;
+      font-weight: bold;
+    }
+    .goal {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      font-size: 16px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .tasks {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .tasks ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .tasks li {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+    .tasks li:last-child {
+      border-bottom: none;
+    }
+    .quote {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+      font-size: 18px;
+      font-style: italic;
+      font-weight: 500;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .history {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 80px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .history h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 18px;
+      text-align: center;
+    }
+    .record {
+      padding: 10px;
+      border-radius: 8px;
+      background: #f1f3f5;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .checkin-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      padding: 15px 60px;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .checkin-btn:active {
+      background: #444;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="stats">
+    <div class="card">
+      <div class="num" id="totalDays">0</div>
+      <div>打卡天数</div>
+    </div>
+    <div class="card">
+      <div class="num" id="earlyDays">0</div>
+      <div>早睡天数</div>
+    </div>
+  </div>
+
+  <div class="section-title">睡眠目标</div>
+  <div class="goal">
+    23:00 - 8:00
+  </div>
+
+  <div class="section-title">睡前事项</div>
+  <div class="tasks">
+    <ul id="taskList">
+      <li>梳头</li>
+      <li>冥想</li>
+      <!-- 可添加更多 -->
+    </ul>
+  </div>
+
+  <div class="quote" id="quote">
+    “优质的睡眠，是最好的修复。”
+  </div>
+
+  <div class="history">
+    <h3>睡眠记录</h3>
+    <div id="historyList">
+      <div class="record">暂无睡眠记录</div>
+    </div>
+  </div>
+</div>
+
+<button class="checkin-btn" onclick="checkIn()">晚安打卡</button>
+
+<script>
+  let totalDays = 0;
+  let earlyDays = 0;
+
+  function checkIn() {
+    const now = new Date();
+    const dateStr = (now.getMonth()+1) + '月' + now.getDate() + '日';
+    const timeStr = now.toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'});
+
+    totalDays += 1;
+    let isLate = parseInt(now.getHours()) >= 23 ? '熬夜' : '正常';
+    if(isLate === '正常') earlyDays += 1;
+
+    document.getElementById('totalDays').innerText = totalDays;
+    document.getElementById('earlyDays').innerText = earlyDays;
+
+    const list = document.getElementById('historyList');
+    if (list.children[0].innerText === '暂无睡眠记录') {
+      list.innerHTML = '';
+    }
+    const div = document.createElement('div');
+    div.className = 'record';
+    div.innerText = dateStr + ' 入睡时间：' + timeStr + ' ' + isLate;
+    list.prepend(div);
+
+    alert('晚安打卡完成！时间：' + timeStr);
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>早睡打卡 · 睡眠搭子早睡计划</title>
+  <style>
+    :root{
+      --bg:#f7f7fb;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --primary:#111111;
+      --accent:#2563eb;
+      --success:#10b981;
+      --warning:#f59e0b;
+      --danger:#ef4444;
+      --radius:16px;
+      --shadow:0 6px 18px rgba(0,0,0,.06);
+    }
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: -apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","WenQuanYi Micro Hei","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+      color:var(--text);
+      background:var(--bg);
+    }
+    .app{
+      max-width:390px;
+      margin:0 auto;
+      padding-bottom:100px;
+    }
+    header{
+      position:sticky; top:0; z-index:5;
+      background:var(--bg);
+      padding:16px 20px 8px;
+    }
+    header h1{ margin:0; font-size:22px; font-weight:700; text-align:center; }
+    .grid{ display:grid; gap:14px; }
+    .grid-2{ grid-template-columns:1fr 1fr; }
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .stat{
+      text-align:center;
+      padding:18px 12px;
+    }
+    .stat .num{font-size:40px; font-weight:800; line-height:1;}
+    .stat .label{color:var(--muted); margin-top:6px; font-size:14px;}
+    .section-title{
+      font-weight:800; font-size:18px; padding:8px 4px 4px;
+    }
+    .goal{
+      display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:center;
+    }
+    .goal .cell{ background:#fafafa; border-radius:12px; padding:12px;}
+    .goal .small{ color:var(--muted); font-size:12px;}
+    .goal .big{ font-size:24px; font-weight:800; margin-top:6px; }
+    .chips{ display:flex; flex-wrap:wrap; gap:10px; }
+    .chip{
+      padding:10px 14px; border-radius:9999px; background:#f9fafb;
+      border:1px solid #eef0f3; font-size:14px;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
+    }
+    .quote{ font-size:20px; line-height:1.6; }
+    .quote small{ display:block; color:var(--muted); margin-top:12px; }
+    .list .item{
+      background:var(--card); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow);
+    }
+    .list{ display:grid; gap:10px; }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      background:var(--primary); color:#fff; padding:14px 18px; border:none; border-radius:9999px;
+      font-size:16px; font-weight:700; cursor:pointer;
+    }
+    .bar{
+      position:fixed; left:0; right:0; bottom:16px; display:flex; justify-content:center; z-index:10;
+    }
+    .bar .btn{ width:min(360px, 92%); height:56px; font-size:18px; }
+    .row{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .sub{ color:var(--muted); font-size:13px; }
+    /* 睡眠对比卡片样式 */
+    .compare-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      text-align: center;
+    }
+    .compare-user {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .compare-name {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .compare-time {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .compare-status {
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-top: 4px;
+    }
+    .compare-status.early {
+      background: var(--success);
+      color: white;
+    }
+    .compare-status.late {
+      background: var(--warning);
+      color: white;
+    }
+    .compare-hint {
+      grid-column: 1 / -1;
+      background: #f0fdf4;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 14px;
+      color: var(--success);
+      text-align: center;
+      margin-top: 8px;
+    }
+    .compare-hint.warning {
+      background: #fffbeb;
+      color: var(--warning);
+    }
+    /* 音频样式 */
+    .audio-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #f9fafb;
+      margin-bottom: 8px;
+    }
+    .audio-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: #e0e7ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .audio-info {
+      flex: 1;
+    }
+    .audio-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .audio-duration {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    /* 睡眠搭子卡片样式 */
+    .buddy-card {
+      padding: 16px;
+    }
+    .buddy-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .buddy-desc {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="row">
+        <div class="sub">8:49</div>
+        <h1>早睡打卡</h1>
+        <div style="width:40px"></div>
+      </div>
+    </header>
+
+    <main style="padding: 0 16px 16px;">
+      <section class="grid grid-2">
+        <div class="card stat">
+          <div class="num" id="earlyDays">0</div>
+          <div class="label">早睡天数</div>
+        </div>
+        <div class="card stat">
+          <div class="num" id="lateDays">8</div>
+          <div class="label">熬夜天数</div>
+        </div>
+      </section>
+
+      <div class="section-title">睡眠目标</div>
+      <section class="card goal">
+        <div class="cell">
+          <div class="small">目标就寝时间</div>
+          <div class="big" id="targetBed">23:00</div>
+        </div>
+        <div class="cell">
+          <div class="small">本月最晚入睡</div>
+          <div class="big">00:16</div>
+        </div>
+      </section>
+
+      <!-- 修改后的睡眠搭子部分 -->
+      <div class="section-title">共同早睡</div>
+      <section class="card buddy-card">
+        <div class="buddy-title">共同早睡</div>
+        <div class="buddy-desc">从今天开始，一起按时睡觉</div>
+        
+        <div class="compare-card">
+          <div class="compare-user">
+            <div class="compare-name">我自己</div>
+            <div class="compare-time">23:15</div>
+            <div class="compare-status early">按时睡觉</div>
+          </div>
+          
+          <div class="compare-user">
+            <div class="compare-name">阿青</div>
+            <div class="compare-time">00:30</div>
+            <div class="compare-status late">熬夜</div>
+          </div>
+          
+          <div class="compare-hint warning">
+            你比搭子早睡了1小时15分钟
+          </div>
+        </div>
+      </section>
+
+      <!-- 冥想助眠部分 -->
+      <div class="section-title">冥想助眠</div>
+      <section class="card">
+        <div class="audio-item">
+          <div class="audio-icon">🎵</div>
+          <div class="audio-info">
+            <div class="audio-title">深度睡眠冥想</div>
+            <div class="audio-duration">15分钟 · 助眠引导</div>
+          </div>
+        </div>
+        <div class="audio-item">
+          <div class="audio-icon">🎵</div>
+          <div class="audio-info">
+            <div class="audio-title">呼吸放松练习</div>
+            <div class="audio-duration">10分钟 · 呼吸调节</div>
+          </div>
+        </div>
+        <div class="audio-item">
+          <div class="audio-icon">🎵</div>
+          <div class="audio-info">
+            <div class="audio-title">自然白噪音</div>
+            <div class="audio-duration">30分钟 · 雨声</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="card quote" style="margin-top:14px;">
+        你走得慢没关系，只要不原地踏步就好。
+        <small>—— 电影《追梦赤子心》</small>
+      </div>
+
+      <div class="section-title">最近一周睡眠记录</div>
+      <section class="list">
+        <div class="item">8月13日 入睡时间：00:04 晚睡</div>
+        <div class="item">8月12日 入睡时间：00:16 晚睡</div>
+        <div class="item">8月10日 入睡时间：23:04 晚睡</div>
+      </section>
+    </main>
+
+    <div class="bar">
+      <button class="btn">晚安打卡</button>
+    </div>
+  </div>
+
+  <script>
+    // 这里可以添加交互逻辑
+  </script>
+</body>
+</html>

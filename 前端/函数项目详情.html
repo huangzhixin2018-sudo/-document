@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)file:///D:/Qwen_html_20250905_in3pkyyy1.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>面向对象项目化学习平台</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9fb; margin: 0; padding: 20px; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 24px; }
+    h1 { color: #2c3e50; }
+    .main-content { display: grid; grid-template-columns: 320px 1fr; gap: 24px; }
+    .sidebar { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .section-title {
+      font-size: 1.2rem;
+      color: #2c3e50;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ddd;
+      font-weight: 600;
+    }
+    .task-list { list-style: none; padding: 0; margin: 0; }
+    .task-item {
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      font-size: 0.95rem;
+      color: #34495e;
+    }
+    .task-item:hover {
+      background: #e9ecef;
+      color: #2c3e50;
+    }
+    .task-item.active {
+      background: #2c3e50;
+      color: white;
+      font-weight: 500;
+    }
+    .right-panel { display: flex; flex-direction: column; gap: 20px; }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .card h3 {
+      margin-top: 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eee;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f4f6f8;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    pre {
+      background: #f8f9fa;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .flow-row {
+      transition: background-color 0.3s;
+    }
+    .flow-row.highlight {
+      background-color: #fff3cd !important;
+    }
+    
+    /* 返回按钮样式 */
+    .back-btn {
+      background: #3498db;
+      color: white;
+      border: 1px solid #2980b9;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 20px;
+      margin-bottom: 16px;
+      transition: all 0.2s ease;
+    }
+    .back-btn:hover {
+      background: #2980b9;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 返回按钮 -->
+    <button class="back-btn" onclick="history.back()">
+      <i class="fas fa-arrow-left"></i> 返回
+    </button>
+    
+    <header>
+      <h1>面向对象项目化学习平台</h1>
+      <p>用类和对象理解项目脚本 · 任务驱动 · 步步为营</p>
+    </header>
+
+    <div class="main-content">
+      <!-- 左侧任务 -->
+      <div class="sidebar">
+        <h2 class="section-title">任务流程</h2>
+        <ul class="task-list" id="taskList">
+          <!-- 由 JavaScript 动态生成 -->
+        </ul>
+      </div>
+
+      <!-- 右侧内容 -->
+      <div class="right-panel">
+        <div class="card">
+          <h3>类卡片模板</h3>
+          <table id="classCard">
+        <tbody><tr>
+          <th>类</th>
+          <th>类属性</th>
+          <th>对象属性</th>
+          <th>方法</th>
+        </tr>
+        <tr>
+          <td>Student</td>
+          <td>school = '第一中学'</td>
+          <td>name (姓名)<br>age (年龄)<br>score (成绩, 默认60)</td>
+          <td>__init__()<br>study()<br>show_info()</td>
+        </tr></tbody></table>
+        </div>
+
+        <div class="card">
+          <h3>对象卡片模板</h3>
+          <table id="objectCard"><tbody><tr><th>对象</th><th>属性</th><th>方法</th></tr>
+          <tr>
+            <td>student1 = Student('小明', 18, 65)</td>
+            <td>name='小明'<br>age=18<br>score=65<br>school='第一中学'</td>
+            <td>study()<br>show_info()</td>
+          </tr>
+          <tr>
+            <td>student2 = Student('小红', 17, 80)</td>
+            <td>name='小红'<br>age=17<br>score=80<br>school='第一中学'</td>
+            <td>study()<br>show_info()</td>
+          </tr></tbody></table>
+        </div>
+
+        <div class="card">
+          <h3>执行流程表（Program Execution Flow）</h3>
+          <table id="flowTable"><tbody><tr><th>步骤</th><th>输入</th><th>输出</th><th>操作</th><th>状态流</th></tr>
+          <tr class="flow-row" data-step="0">
+            <td>1</td>
+            <td>类定义</td>
+            <td>Student 类</td>
+            <td>创建类</td>
+            <td>无类 → 有类</td>
+          </tr>
+          <tr class="flow-row" data-step="1">
+            <td>2</td>
+            <td>Student + 参数</td>
+            <td>对象</td>
+            <td>实例化</td>
+            <td>未实例化 → 已实例化</td>
+          </tr>
+          <tr class="flow-row" data-step="2">
+            <td>3</td>
+            <td>对象</td>
+            <td>对象信息</td>
+            <td>调用 show_info()</td>
+            <td>展示属性</td>
+          </tr>
+          <tr class="flow-row" data-step="3">
+            <td>4</td>
+            <td>对象</td>
+            <td>成绩更新</td>
+            <td>调用 study()</td>
+            <td>score 变化</td>
+          </tr>
+          <tr class="flow-row" data-step="4">
+            <td>5</td>
+            <td>多个对象</td>
+            <td>班级列表</td>
+            <td>建立关系</td>
+            <td>独立对象 → 关联</td>
+          </tr></tbody></table>
+        </div>
+
+        <div class="card">
+          <h3>实现代码</h3>
+          <pre id="codeDisplay">class Student:
+    school = "第一中学"
+
+    def __init__(self, name, age, score=60):
+        self.name = name
+        self.age = age
+        self.score = score
+
+    def study(self):
+        self.score += 5
+        print(f"{self.name} 学习后成绩: {self.score}")
+
+    def show_info(self):
+        print(f"姓名:{self.name}, 年龄:{self.age}, 成绩:{self.score}, 学校:{Student.school}")
+
+# 实例化对象
+student1 = Student("小明", 18, 65)
+student2 = Student("小红", 17, 80)
+
+# 展示初始信息
+student1.show_info()
+student2.show_info()
+
+# 调用方法，更新成绩
+student1.study()
+student2.study()
+
+# 再次展示信息
+student1.show_info()
+student2.show_info()
+
+# 建立班级
+classroom = [student1, student2]
+print("班级成员:", [s.name for s in classroom])</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tasks = [
+      {
+        name: "学生管理系统",
+        description: "实现一个学生管理系统，能记录学生信息，并提供方法修改和展示成绩。",
+        classCard: {
+          class: "Student",
+          classAttr: ["school = '第一中学'"],
+          objAttr: ["name (姓名)", "age (年龄)", "score (成绩, 默认60)"],
+          methods: ["__init__()", "study()", "show_info()"]
+        },
+        objectCard: [
+          {
+            obj: "student1 = Student('小明', 18, 65)",
+            attr: ["name='小明'", "age=18", "score=65", "school='第一中学'"],
+            methods: ["study()", "show_info()"]
+          },
+          {
+            obj: "student2 = Student('小红', 17, 80)",
+            attr: ["name='小红'", "age=17", "score=80", "school='第一中学'"],
+            methods: ["study()", "show_info()"]
+          }
+        ],
+        flow: [
+          { step: 1, input: "类定义", output: "Student 类", action: "创建类", state: "无类 → 有类" },
+          { step: 2, input: "Student + 参数", output: "对象", action: "实例化", state: "未实例化 → 已实例化" },
+          { step: 3, input: "对象", output: "对象信息", action: "调用 show_info()", state: "展示属性" },
+          { step: 4, input: "对象", output: "成绩更新", action: "调用 study()", state: "score 变化" },
+          { step: 5, input: "多个对象", output: "班级列表", action: "建立关系", state: "独立对象 → 关联" }
+        ],
+        code: `class Student:
+    school = "第一中学"
+
+    def __init__(self, name, age, score=60):
+        self.name = name
+        self.age = age
+        self.score = score
+
+    def study(self):
+        self.score += 5
+        print(f"{self.name} 学习后成绩: {self.score}")
+
+    def show_info(self):
+        print(f"姓名:{self.name}, 年龄:{self.age}, 成绩:{self.score}, 学校:{Student.school}")
+
+# 实例化对象
+student1 = Student("小明", 18, 65)
+student2 = Student("小红", 17, 80)
+
+# 展示初始信息
+student1.show_info()
+student2.show_info()
+
+# 调用方法，更新成绩
+student1.study()
+student2.study()
+
+# 再次展示信息
+student1.show_info()
+student2.show_info()
+
+# 建立班级
+classroom = [student1, student2]
+print("班级成员:", [s.name for s in classroom])`
+      }
+    ];
+
+    const taskList = document.getElementById("taskList");
+    const classCard = document.getElementById("classCard");
+    const objectCard = document.getElementById("objectCard");
+    const flowTable = document.getElementById("flowTable");
+    const codeDisplay = document.getElementById("codeDisplay");
+
+    // 初始化项目主任务（这里只有一个项目，可扩展）
+    const project = tasks[0];
+
+    // 将流程表的每个步骤转化为“子任务”展示
+    project.flow.forEach((step, index) => {
+      const li = document.createElement("li");
+      li.className = "task-item";
+      li.dataset.stepIndex = index; // 绑定步骤索引
+
+      li.textContent = step.action;
+
+      li.addEventListener('click', () => {
+        // 清除所有高亮
+        document.querySelectorAll('.task-item').forEach(item => item.classList.remove('active'));
+        document.querySelectorAll('.flow-row').forEach(row => row.classList.remove('highlight'));
+
+        // 高亮当前任务
+        li.classList.add('active');
+
+        // 高亮流程表对应行
+        const row = flowTable.querySelectorAll('tr')[index + 1]; // +1 跳过表头
+        if (row) {
+          row.classList.add('highlight');
+        }
+
+        // 更新其他面板（保持原内容，仅联动高亮）
+        renderClassCard();
+        renderObjectCard();
+        renderFlowTable();
+        codeDisplay.textContent = project.code;
+      });
+
+      taskList.appendChild(li);
+    });
+
+    // 渲染类卡片
+    function renderClassCard() {
+      classCard.innerHTML = `
+        <tr>
+          <th>类</th>
+          <th>类属性</th>
+          <th>对象属性</th>
+          <th>方法</th>
+        </tr>
+        <tr>
+          <td>${project.classCard.class}</td>
+          <td>${project.classCard.classAttr.join("<br>")}</td>
+          <td>${project.classCard.objAttr.join("<br>")}</td>
+          <td>${project.classCard.methods.join("<br>")}</td>
+        </tr>`;
+    }
+
+    // 渲染对象卡片
+    function renderObjectCard() {
+      let objHtml = "<tr><th>对象</th><th>属性</th><th>方法</th></tr>";
+      project.objectCard.forEach(o => {
+        objHtml += `
+          <tr>
+            <td>${o.obj}</td>
+            <td>${o.attr.join("<br>")}</td>
+            <td>${o.methods.join("<br>")}</td>
+          </tr>`;
+      });
+      objectCard.innerHTML = objHtml;
+    }
+
+    // 渲染流程表
+    function renderFlowTable() {
+      let flowHtml = "<tr><th>步骤</th><th>输入</th><th>输出</th><th>操作</th><th>状态流</th></tr>";
+      project.flow.forEach((f, index) => {
+        flowHtml += `
+          <tr class="flow-row" data-step="${index}">
+            <td>${f.step}</td>
+            <td>${f.input}</td>
+            <td>${f.output}</td>
+            <td>${f.action}</td>
+            <td>${f.state}</td>
+          </tr>`;
+      });
+      flowTable.innerHTML = flowHtml;
+    }
+
+    // 初始化显示第一个任务
+    function init() {
+      renderClassCard();
+      renderObjectCard();
+      renderFlowTable();
+      codeDisplay.textContent = project.code;
+
+      // 默认激活第一步
+      if (taskList.children.length > 0) {
+        taskList.children[0].click();
+      }
+    }
+
+    // 启动
+    init();
+  </script>
+
+</body></html>

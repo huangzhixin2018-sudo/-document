@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思维空间后台 | 管理中心</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-hover: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f7fb;
+            overflow-x: hidden;
+        }
+        a { text-decoration: none; color: inherit; }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        .logo i {
+            margin-right: 10px;
+            color: var(--success);
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        nav ul li {
+            margin-left: 25px;
+            position: relative;
+        }
+        nav ul li a {
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 8px 0;
+            position: relative;
+        }
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--success);
+            transition: var(--transition);
+        }
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.15);
+            padding: 6px 16px;
+            border-radius: 20px;
+        }
+        .user-box i {
+            color: var(--success);
+        }
+        .btn-logout {
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        .btn-logout:hover {
+            background: #3ab0d5;
+        }
+        /* Dashboard Hero */
+        .dashboard-hero {
+            background: linear-gradient(to right, rgba(67,97,238,0.9), rgba(63,55,201,0.9)), url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 60px 0 40px 0;
+            text-align: center;
+        }
+        .dashboard-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .dashboard-hero p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+        /* 快捷入口 */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 25px;
+            margin: 40px 0 50px 0;
+        }
+        .action-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 30px 20px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .action-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            background: var(--light-gray);
+        }
+        .action-card i {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+        .action-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        /* 数据统计 */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 30px 20px;
+            text-align: center;
+            transition: var(--transition);
+        }
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-card .stat-label {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 40px;
+        }
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        .footer-column {
+            min-width: 200px;
+        }
+        .footer-column h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            position: relative;
+            padding-bottom: 8px;
+        }
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--accent);
+        }
+        .footer-links {
+            list-style: none;
+        }
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        .footer-links a {
+            color: #adb5bd;
+            transition: var(--transition);
+        }
+        .footer-links a:hover {
+            color: var(--success);
+            padding-left: 5px;
+        }
+        .copyright {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            .header-container { flex-direction: column; gap: 15px; }
+            nav ul { flex-wrap: wrap; justify-content: center; }
+            nav ul li { margin: 5px 10px; }
+            .dashboard-hero h1 { font-size: 2rem; }
+            .quick-actions, .stats-section { grid-template-columns: 1fr; }
+            .footer-content { flex-direction: column; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>思维空间后台</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">仪表盘</a></li>
+                    <li><a href="#">文章管理</a></li>
+                    <li><a href="#">用户管理</a></li>
+                    <li><a href="#">分类管理</a></li>
+                    <li><a href="#">系统设置</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="user-box">
+                    <i class="fas fa-user-circle"></i>
+                    <span>管理员</span>
+                </div>
+                <button class="btn-logout">退出</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Hero -->
+    <section class="dashboard-hero">
+        <div class="container">
+            <h1>欢迎来到思维空间后台管理中心</h1>
+            <p>高效管理内容、用户与系统，助力平台持续成长</p>
+        </div>
+    </section>
+
+    <!-- 快捷入口 -->
+    <section class="container">
+        <div class="quick-actions">
+            <div class="action-card">
+                <i class="fas fa-pen-nib"></i>
+                <h3>发布新文章</h3>
+                <p>快速创建并发布优质内容</p>
+            </div>
+            <div class="action-card">
+                <i class="fas fa-users-cog"></i>
+                <h3>用户管理</h3>
+                <p>查看与管理平台用户信息</p>
+            </div>
+            <div class="action-card">
+                <i class="fas fa-layer-group"></i>
+                <h3>分类管理</h3>
+                <p>维护文章分类体系</p>
+            </div>
+            <div class="action-card">
+                <i class="fas fa-cogs"></i>
+                <h3>系统设置</h3>
+                <p>配置平台参数与安全策略</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数据统计 -->
+    <section class="container">
+        <div class="stats-section">
+            <div class="stat-card">
+                <i class="fas fa-file-alt"></i>
+                <div class="stat-value">245</div>
+                <div class="stat-label">文章总数</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-value">120</div>
+                <div class="stat-label">注册用户</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-comments"></i>
+                <div class="stat-value">876</div>
+                <div class="stat-label">评论数</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-eye"></i>
+                <div class="stat-value">32,500</div>
+                <div class="stat-label">总浏览量</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>关于平台</h3>
+                    <p>思维空间后台为管理员提供高效、便捷的内容与用户管理工具，保障平台健康运营。</p>
+                </div>
+                <div class="footer-column">
+                    <h3>管理导航</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">仪表盘</a></li>
+                        <li><a href="#">文章管理</a></li>
+                        <li><a href="#">用户管理</a></li>
+                        <li><a href="#">系统设置</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> admin@siweikongjian.com</li>
+                        <li><i class="fas fa-phone"></i> +86 123 4567 8910</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 思维空间后台. 保留所有权利。</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // 卡片悬停效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.action-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-8px)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+            // 退出按钮
+            const logoutBtn = document.querySelector('.btn-logout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    alert('已退出登录');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
